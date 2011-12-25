@@ -110,5 +110,16 @@ class PolygoniasConfiguration extends FileConfiguration{
     protected String buildHeader() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    //FIXME make getDefault(CFlags cFlags) look up the correct value
+    /**
+     * Gets world flag value
+     * 
+     * @param cFlags
+     * @return Always returns true
+     */
+    Boolean getDefault(CFlags cFlags) {
+        return true;
+    }
     
 }

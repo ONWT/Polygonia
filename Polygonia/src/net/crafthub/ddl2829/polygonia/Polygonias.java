@@ -42,7 +42,11 @@ public class Polygonias extends JavaPlugin{
     public static final Logger log = Logger.getLogger("Minecraft");
     
     private PluginManager pm = this.getServer().getPluginManager();
-    PolygoniasConfiguration PConfig = new PolygoniasConfiguration();
+    static PolygoniasConfiguration PConfig = new PolygoniasConfiguration();
+
+    public static PolygoniasConfiguration getPConfig() {
+        return PConfig;
+    }
     protected FileConfiguration config;
     
     private PluginDescriptionFile pdFile = this.getDescription();

@@ -40,17 +40,30 @@ import org.bukkit.Location;
 
 public class PolygonArea {
     private Polygon area;
+    private String name;
     private Map<CFlags,Boolean> flags = new EnumMap<CFlags,Boolean>(CFlags.class);
     private Map<String,Map<CFlags,Boolean>> PlayerFlags = new HashMap<String,Map<CFlags,Boolean>>();
     private Set<String> Owners = new HashSet<String>();
     private Integer MaxY;
     
+    /**
+     * 
+     * @param area
+     * @param Owners
+     * @param MaxY
+     * @param MinY
+     */
     public PolygonArea(Polygon area, Set<String> Owners, Integer MaxY, Integer MinY) {
         this.area = area;
         this.Owners = Owners;
         this.MaxY = MaxY;
         this.MinY = MinY;
     }
+    
+    /**
+     * Get the bounding box for the current area (this is slow)
+     * @return the bounding box of the area as a Rectangle2D
+     */
     public Rectangle2D getBoundingbox(){
         return area.getBounds2D();
     }
@@ -65,6 +78,12 @@ public class PolygonArea {
         return area.contains(cord.getBlockX(),cord.getBlockZ());
     }
     
+    /**
+     * Set player flag for the current area
+     * @param name Player name
+     * @param flag Flag to set
+     * @param value Boolean value of the flag
+     */
     public void setPlayerFlag(String name, CFlags flag,Boolean value){
         if (!PlayerFlags.containsKey(name)) {
             Map<CFlags,Boolean> temp = new EnumMap<CFlags, Boolean>(CFlags.class);
@@ -75,10 +94,19 @@ public class PolygonArea {
         }
     }
     
+    /**
+     * 
+     * @param flag
+     * @param value
+     */
     public void setFlag(CFlags flag,Boolean value){
-        throw new UnsupportedOperationException("Not supported yet.");
+        flags.put(flag, value);
     }
     
+    /**
+     * 
+     * @return
+     */
     public Set<String> getOwners() {
         return Owners;
     }
@@ -93,36 +121,104 @@ public class PolygonArea {
     }
 
     /**
-     * Get a specific players flags
+     * Get a specific players flags or null if player hasn't been given a flag in his area.
      * 
      * @param player player name
-     * @return A Map of CFlags and boolean
+     * @return A Map of CFlags and boolean or null if no flag for the player is set
      */
     public Map<CFlags, Boolean> getPlayerFlags(String player) {
         return PlayerFlags.get(player);
     }
+    
+    /**
+     * Gets the specific players specific flag for current zone if none set it checks the area flags(see getFlag(CFlags cFlags))).
+     * Fail checks.
+     * @param player Player name
+     * @param flag Flag to check
+     * @return Boolean of flag state.
+     */
+    public Boolean getPlayerFlag(String player,CFlags flag) {
+        if(PlayerFlags.containsKey(player) && PlayerFlags.get(player).containsKey(flag))
+            return getPlayerFlags(player).get(flag) && getFlag(flag);
+        else
+            return getFlag(flag);
+    }
+    
+    /**
+     * 
+     * @return
+     */
     public Polygon getArea() {
         return area;
     }
 
+    /**
+     * Get current area flags
+     * @return <code>Map<CFlags, Boolean></code>
+     */
     public Map<CFlags, Boolean> getFlags() {
         return flags;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Integer getMaxY() {
         return MaxY;
     }
 
+    /**
+     * 
+     * @param MaxY
+     */
     public void setMaxY(Integer MaxY) {
         this.MaxY = MaxY;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Integer getMinY() {
         return MinY;
     }
 
+    /**
+     * 
+     * @param MinY
+     */
     public void setMinY(Integer MinY) {
         this.MinY = MinY;
     }
     private Integer MinY;
+    
+    /**
+     * Get the area name
+     * @return 
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Set the area name
+     * @param name Area name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Gets the area flag else the default world value is returned.
+     * 
+     * @param cFlags Flag to check
+     * @return Boolean for the flag in the area
+     */
+    private Boolean getFlag(CFlags cFlags) {
+        if(flags.containsKey(cFlags))
+            return flags.get(cFlags);
+        else
+            return Polygonias.getPConfig().getDefault(cFlags);
+    }
 }

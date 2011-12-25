@@ -24,6 +24,7 @@
 package net.crafthub.ddl2829.polygonia;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import org.bukkit.Location;
 
@@ -32,22 +33,38 @@ import org.bukkit.Location;
  * @author noobs
  */
 public class AreaHandler {
-    private Set<PolygonArea> Activeareas;
+    private Map<String,PolygonArea> Activeareas;
     
     public Set<PolygonArea> getAreasAfected(Location cord){
         Set<PolygonArea> ret = new HashSet<PolygonArea>();
-        for (PolygonArea a : Activeareas){
-           if(a.isBlockInPolygon(cord)){
-            ret.add(a);
+        for (String a : Activeareas.keySet()){
+           if(Activeareas.get(a).isBlockInPolygon(cord)){
+            ret.add(Activeareas.get(a));
            }    
         }
         return ret;
     }
+    
+    public PolygonArea getAreaByName(String name) throws Exception{
+        if (Activeareas.containsKey(name))
+            return Activeareas.get(name);
+        else
+            throw new Exception("No area by that name");
+    }
+    
+    public Boolean checkFlag(CFlags flag, Location cord, String PlayerName){
+        Boolean ret = true;
+        for(PolygonArea area: getAreasAfected(cord)){
+            ret &= area.getPlayerFlag(PlayerName, flag);
+        }
+        return ret;
+    }
+    
     public void addArea(PolygonArea area){
-        Activeareas.add(area);
+        Activeareas.put(area.getName(),area);
     }
  
     public void removeArea(PolygonArea area){
-        
+        Activeareas.remove(area.getName());
     }
 }
