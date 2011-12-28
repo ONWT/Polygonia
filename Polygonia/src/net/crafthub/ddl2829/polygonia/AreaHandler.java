@@ -23,18 +23,30 @@
  */
 package net.crafthub.ddl2829.polygonia;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.bukkit.Location;
+import org.bukkit.plugin.Plugin;
 
 /**
  *
  * @author noobs
  */
 public class AreaHandler {
+
     private Map<String,PolygonArea> Activeareas;
-    
+    private Plugin plugin;
+
+    public AreaHandler(Plugin mPlugin) {
+        plugin = mPlugin;
+    }
+
+    AreaHandler() {
+    }
     public Set<PolygonArea> getAreasAfected(Location cord){
         Set<PolygonArea> ret = new HashSet<PolygonArea>();
         for (String a : Activeareas.keySet()){
@@ -66,5 +78,26 @@ public class AreaHandler {
  
     public void removeArea(PolygonArea area){
         Activeareas.remove(area.getName());
+    }
+    
+    public void saveToFile(){
+        if(plugin.getDataFolder().canWrite()){
+            for(String areaToSave : Activeareas.keySet()){
+                PolygonArea area = Activeareas.get(areaToSave);
+                
+                FileOutputStream fos = null;
+                ObjectOutputStream out = null;
+                try
+                {
+                    fos = new FileOutputStream(plugin.getDataFolder().getAbsolutePath()+area.getName());
+                    out = new ObjectOutputStream(fos);
+                    out.writeObject(area);
+                    out.close();
+                }
+                catch(IOException ex)
+                {
+                }
+            }
+        }
     }
 }
