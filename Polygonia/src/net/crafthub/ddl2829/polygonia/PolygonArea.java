@@ -25,6 +25,7 @@ package net.crafthub.ddl2829.polygonia;
 
 import java.awt.Polygon;
 import java.awt.geom.Rectangle2D;
+import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,13 +39,18 @@ import org.bukkit.Location;
  * @author noobs
  */
 
-public class PolygonArea {
-    private Polygon area;
+public class PolygonArea implements Serializable {
     private String name;
-    private Map<CFlags,Boolean> flags = new EnumMap<CFlags,Boolean>(CFlags.class);
+    private Map<CFlags,Boolean> flags;
+    /**
+     * key: player name
+     * value: Map of enum CFlags as key and a boolean as value
+     */
     private Map<String,Map<CFlags,Boolean>> PlayerFlags = new HashMap<String,Map<CFlags,Boolean>>();
     private Set<String> Owners = new HashSet<String>();
     private Integer MaxY;
+    private String World;
+    private Polygon area;
     
     /**
      * 
@@ -53,11 +59,12 @@ public class PolygonArea {
      * @param MaxY
      * @param MinY
      */
-    public PolygonArea(Polygon area, Set<String> Owners, Integer MaxY, Integer MinY) {
+    public PolygonArea(Polygon area, Set<String> Owners, Integer MaxY, Integer MinY, String name) {
         this.area = area;
         this.Owners = Owners;
         this.MaxY = MaxY;
         this.MinY = MinY;
+        this.name = name;
     }
     
     /**
@@ -207,6 +214,14 @@ public class PolygonArea {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getWorld() {
+        return World;
+    }
+
+    public void setWorld(String World) {
+        this.World = World;
     }
 
     /**
