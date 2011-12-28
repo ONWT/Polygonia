@@ -119,7 +119,7 @@ class PolygoniasConfiguration extends FileConfiguration{
      * @return Always returns true
      */
     Boolean getDefault(CFlags cFlags) {
-        return true;
+        return config.getBoolean("allow-"+cFlags.name()+"-by-default");
     }
     
 }
