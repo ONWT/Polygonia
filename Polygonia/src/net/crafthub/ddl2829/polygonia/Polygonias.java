@@ -47,6 +47,8 @@ public class Polygonias extends JavaPlugin{
     public static PolygoniasConfiguration getPConfig() {
         return PConfig;
     }
+    
+    private AreaHandler areahandler;
     protected FileConfiguration config;
     
     private PluginDescriptionFile pdFile = this.getDescription();
@@ -54,6 +56,8 @@ public class Polygonias extends JavaPlugin{
     @Override
     public void onEnable() {
         config = PConfig.get(config);
+        
+        areahandler = new AreaHandler(this);
         
         pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Monitor, this);
         pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Priority.Monitor, this);
@@ -82,6 +86,8 @@ public class Polygonias extends JavaPlugin{
     public void logMessage(String msg) {
         log.log(Level.INFO, "{0} {1}: {2}", new Object[]{pdFile.getName(), pdFile.getVersion(), msg});
     }
-    
 
+    public AreaHandler getAreahandler() {
+        return areahandler;
+    }
 }
