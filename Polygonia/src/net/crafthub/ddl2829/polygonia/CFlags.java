@@ -35,7 +35,11 @@ package net.crafthub.ddl2829.polygonia;
  *  Bucket,                 //Controls bucket fill and empty permissions
  *  Firespread,             //Controls firespread in area
  *  Grassspread,            //Controls grassspread in area
+ *  IceSpread,              //controls Icespread in thundra and taiga biomes
+ *  Mushroomspread,         //Controls both red and green mushroom spread
+ *  Snowfall,               //Controls snow fomrmation during snow storm
  *  Ignite,                 //Controls ignite permissions
+ *  FireBlockDamage,        //Controls if a block is broken from it burning
  *  Animals,                //Controls animal spawn in area
  *  Monsters,               //Controls mob spawn in area
  *  EndermanPlace,          //Controls enderman place in area
@@ -48,6 +52,7 @@ package net.crafthub.ddl2829.polygonia;
  *  TnT,                    //Controls tnt prime in area
  *  Foodreplenish,          //Controls eating permissions
  *  Foodheal,               //Controls if full healt bar heals in this area in area
+ *  Dispence,               //Controls if Dispensers can shoot
  * 
  * @author noobs
  */
@@ -63,7 +68,11 @@ public enum CFlags{
     Bucket,                 //Controls bucket fill and empty permissions
     Firespread,             //Controls firespread in area
     Grassspread,            //Controls grassspread in area
+    IceSpread,              //controls Icespread in thundra and taiga biomes
+    Mushroomspread,         //Controls both red and green mushroom spread
+    Snowfall,               //Controls snow fomrmation during snow storm
     Ignite,                 //Controls ignite permissions
+    FireBlockDamage,        //Controls if a block is broken from it burning
     Animals,                //Controls animal spawn in area
     Monsters,               //Controls mob spawn in area
     EndermanPlace,          //Controls enderman place in area
@@ -76,4 +85,5 @@ public enum CFlags{
     TnT,                    //Controls tnt prime in area
     Foodreplenish,          //Controls eating permissions
     Foodheal,               //Controls if full healt bar heals in this area in area
+    Dispence,               //Controls if Dispensers can shoot
 }
