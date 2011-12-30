@@ -23,6 +23,7 @@
  */
 package net.crafthub.ddl2829.polygonia;
 
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -33,23 +34,40 @@ class PolygoniasPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
+        if(!event.isCancelled()){
+            if(!plugin.getAreahandler().checkFlag(CFlags.Bucket, event.getBlockClicked().getLocation(), event.getPlayer().getName()))
+                event.setCancelled(true);
+        }
         super.onPlayerBucketEmpty(event);
     }
 
     @Override
     public void onPlayerBucketFill(PlayerBucketFillEvent event) {
+        if(!event.isCancelled()){
+            if(!plugin.getAreahandler().checkFlag(CFlags.Bucket, event.getBlockClicked().getLocation(), event.getPlayer().getName()))
+                event.setCancelled(true);
+        }
         super.onPlayerBucketFill(event);
     }
 
     @Override
     public void onPlayerInteract(PlayerInteractEvent event) {
+        if(!event.isCancelled()){
+            if(!plugin.getAreahandler().checkFlag(CFlags.Use, event.getClickedBlock().getLocation(), event.getPlayer().getName())&&(event.getAction()==Action.RIGHT_CLICK_BLOCK||event.getAction()==Action.LEFT_CLICK_BLOCK))
+                event.setCancelled(true);
+        }
         super.onPlayerInteract(event);
     }
 
     @Override
     public void onPlayerMove(PlayerMoveEvent event) {
+        if(!event.isCancelled()){
+            if(!plugin.getAreahandler().checkFlag(CFlags.Move, event.getTo(), event.getPlayer().getName()))
+                event.setCancelled(true);
+        }
         super.onPlayerMove(event);
     }
+    
     public Polygonias plugin;
     
     public PolygoniasPlayerListener(Polygonias instance) {
