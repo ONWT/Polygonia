@@ -82,7 +82,7 @@ public class PolygonArea implements Serializable {
      * @return If area contains Location returns true
      */
     public boolean isBlockInPolygon(Location cord){
-        return area.contains(cord.getBlockX(),cord.getBlockZ());
+        return area.contains(cord.getBlockX(),cord.getBlockZ())&&(cord.getBlockY()>MinY&&cord.getBlockY()<MaxY);
     }
     
     /**
@@ -220,6 +220,10 @@ public class PolygonArea implements Serializable {
         return World;
     }
 
+    /**
+     * 
+     * @param World The name of the world this area is in.
+     */
     public void setWorld(String World) {
         this.World = World;
     }
@@ -230,7 +234,7 @@ public class PolygonArea implements Serializable {
      * @param cFlags Flag to check
      * @return Boolean for the flag in the area
      */
-    private Boolean getFlag(CFlags cFlags) {
+    public Boolean getFlag(CFlags cFlags) {
         if(flags.containsKey(cFlags))
             return flags.get(cFlags);
         else
