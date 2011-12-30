@@ -72,6 +72,14 @@ public class AreaHandler {
         return ret;
     }
     
+    public Boolean checkFlag(CFlags flag, Location cord){
+        Boolean ret = true;
+        for(PolygonArea area: getAreasAfected(cord)){
+            ret &= area.getFlag(flag);
+        }
+        return ret;
+    }
+    
     public void addArea(PolygonArea area){
         Activeareas.put(area.getName(),area);
     }
