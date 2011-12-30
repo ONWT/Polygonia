@@ -24,8 +24,10 @@
 package net.crafthub.ddl2829.polygonia;
 
 import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockCanBuildEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
+import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockListener;
@@ -37,41 +39,125 @@ class PolygoniasBlockListener extends BlockListener{
 
     @Override
     public void onBlockBurn(BlockBurnEvent event) {
+        if(!event.isCancelled()){
+            if(!plugin.getAreahandler().checkFlag(CFlags.FireBlockDamage, event.getBlock().getLocation()))
+                event.setCancelled(true);
+        }
         super.onBlockBurn(event);
     }
 
     @Override
     public void onBlockDamage(BlockDamageEvent event) {
+        if(!event.isCancelled()){
+            if(!plugin.getAreahandler().checkFlag(CFlags.Destroy, event.getBlock().getLocation(),event.getPlayer().getName()))
+                event.setCancelled(true);
+        }
         super.onBlockDamage(event);
     }
 
     @Override
     public void onBlockDispense(BlockDispenseEvent event) {
+        if(!event.isCancelled()){
+            if(!plugin.getAreahandler().checkFlag(CFlags.Dispence, event.getBlock().getLocation()))
+                event.setCancelled(true);
+        }
         super.onBlockDispense(event);
     }
 
     @Override
+    public void onBlockCanBuild(BlockCanBuildEvent event) {
+        super.onBlockCanBuild(event);
+    }
+
+    @Override
+    public void onBlockForm(BlockFormEvent event) {
+        if(!event.isCancelled()){
+            switch(event.getNewState().getType()){
+                case ICE:
+                    if(!plugin.getAreahandler().checkFlag(CFlags.IceSpread, event.getNewState().getBlock().getLocation()))
+                        event.setCancelled(true);
+                    break;
+                case SNOW:
+                    if(!plugin.getAreahandler().checkFlag(CFlags.Snowfall, event.getNewState().getBlock().getLocation()))
+                        event.setCancelled(true);
+                    break;
+            }
+        }
+        super.onBlockForm(event);
+    }
+
+    @Override
     public void onBlockFromTo(BlockFromToEvent event) {
+        if(!event.isCancelled()){
+            if(plugin.getAreahandler().checkFlag(CFlags.Flow, event.getBlock().getLocation()))
+            {
+                switch(event.getBlock().getType()){
+                    case WATER:
+                    case STATIONARY_WATER:
+                        if(!plugin.getAreahandler().checkFlag(CFlags.WaterFlow, event.getBlock().getLocation()))
+                            event.setCancelled(true);
+                        break;
+                    case LAVA:
+                    case STATIONARY_LAVA:
+                        if(!plugin.getAreahandler().checkFlag(CFlags.LavaFlow, event.getBlock().getLocation()))
+                            event.setCancelled(true);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
         super.onBlockFromTo(event);
     }
 
     @Override
     public void onBlockIgnite(BlockIgniteEvent event) {
+        if(!event.isCancelled()){
+            if(!plugin.getAreahandler().checkFlag(CFlags.Ignite, event.getBlock().getLocation(),event.getPlayer().getName()))
+                event.setCancelled(true);
+        }
         super.onBlockIgnite(event);
     }
 
     @Override
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
+        if(!event.isCancelled()){
+            if(!plugin.getAreahandler().checkFlag(CFlags.Piston, event.getBlock().getLocation()))
+                event.setCancelled(true);
+        }
         super.onBlockPistonExtend(event);
     }
 
     @Override
     public void onBlockPlace(BlockPlaceEvent event) {
+        if(!event.isCancelled()){
+            if(!plugin.getAreahandler().checkFlag(CFlags.Build, event.getBlock().getLocation(),event.getPlayer().getName()))
+                event.setCancelled(true);
+        }
         super.onBlockPlace(event);
     }
 
     @Override
     public void onBlockSpread(BlockSpreadEvent event) {
+        if(!event.isCancelled()){
+            switch(event.getSource().getType()){
+                case GRASS:
+                    if(!plugin.getAreahandler().checkFlag(CFlags.Grassspread, event.getBlock().getLocation()))
+                        event.setCancelled(true);
+                    break;
+                case FIRE:
+                    if(!plugin.getAreahandler().checkFlag(CFlags.Firespread, event.getBlock().getLocation()))
+                        event.setCancelled(true);
+                    break;
+                case RED_MUSHROOM:
+                case BROWN_MUSHROOM:
+                    if(!plugin.getAreahandler().checkFlag(CFlags.Mushroomspread, event.getBlock().getLocation()))
+                        event.setCancelled(true);
+                    break;
+                default:
+                    break;
+            }
+        }
         super.onBlockSpread(event);
     }
     public Polygonias plugin;
