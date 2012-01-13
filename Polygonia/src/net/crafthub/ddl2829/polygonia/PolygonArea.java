@@ -49,8 +49,11 @@ public class PolygonArea implements Serializable {
     private Map<String,Map<CFlags,Boolean>> PlayerFlags = new HashMap<String,Map<CFlags,Boolean>>();
     private Set<String> Owners = new HashSet<String>();
     private Integer MaxY;
+    private Integer MinY;
     private String World;
     private Polygon area;
+    private Boolean isSubzone;
+    private PolygonArea parent;
     
     /**
      * 
@@ -138,15 +141,19 @@ public class PolygonArea implements Serializable {
     }
     
     /**
-     * Gets the specific players specific flag for current zone if none set it checks the area flags(see getFlag(CFlags cFlags))).
-     * Fail checks.
+     * Gets the specific players specific flag for current zone if none set it checks the parent zone then checks area flags(see getFlag(CFlags cFlags))).
+     * Whit fail checks.
      * @param player Player name
      * @param flag Flag to check
      * @return Boolean of flag state.
      */
     public Boolean getPlayerFlag(String player,CFlags flag) {
-        if(PlayerFlags.containsKey(player) && PlayerFlags.get(player).containsKey(flag))
+        if(PlayerFlags.containsKey(player) && PlayerFlags.get(player).containsKey(flag) && isSubzone)
+            return getPlayerFlags(player).get(flag) && getFlag(flag) && parent.getPlayerFlag(player, flag);
+        else if(PlayerFlags.containsKey(player) && PlayerFlags.get(player).containsKey(flag))
             return getPlayerFlags(player).get(flag) && getFlag(flag);
+        else if(isSubzone)
+            return parent.getPlayerFlag(player, flag);
         else
             return getFlag(flag);
     }
@@ -198,7 +205,6 @@ public class PolygonArea implements Serializable {
     public void setMinY(Integer MinY) {
         this.MinY = MinY;
     }
-    private Integer MinY;
     
     /**
      * Get the area name
@@ -229,7 +235,7 @@ public class PolygonArea implements Serializable {
     }
 
     /**
-     * Gets the area flag else the default world value is returned.
+     * Gets the area flag if false then checks if there is a parent flag else the default world value is returned.
      * 
      * @param cFlags Flag to check
      * @return Boolean for the flag in the area
@@ -237,6 +243,8 @@ public class PolygonArea implements Serializable {
     public Boolean getFlag(CFlags cFlags) {
         if(flags.containsKey(cFlags))
             return flags.get(cFlags);
+        else if(isSubzone)
+            return parent.getFlag(cFlags);
         else
             return Polygonias.getPConfig().getDefault(cFlags);
     }
